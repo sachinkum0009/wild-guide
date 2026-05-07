@@ -11,6 +11,9 @@ Autonomous Navigation System for outdoor
 
 ![RViz Visualization](docs/media/wild_guide_rviz.png)
 
+### Gazebo Simulation
+![Gazebo Simulation](docs/media/wild_guide_gz.png)
+
 This repo is developed for Outdoor Navigation.
 
 |ROS2 Packages|Description|Docs|
