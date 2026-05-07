@@ -7,6 +7,10 @@ Autonomous Navigation System for outdoor
 
 ![FreeCAD Design](docs/media/freecad_design.png)
 
+### RViz Visualization
+
+![RViz Visualization](docs/media/wild_guide_rviz.png)
+
 This repo is developed for Outdoor Navigation.
 
 |ROS2 Packages|Description|Docs|
