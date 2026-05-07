@@ -5,7 +5,7 @@ Autonomous Navigation System for outdoor
 
 ### FreeCAD Design
 
-![FreeCAD Design](docs/media/freecad_design2.png)
+![FreeCAD Design](docs/media/freecad_design.png)
 
 This repo is developed for Outdoor Navigation.
 
