@@ -10,7 +10,15 @@ find_package(ament_cmake REQUIRED)
 find_package(ament_cmake_ros REQUIRED)
 # uncomment the following section in order to fill in
 # further dependencies manually.
-# find_package(<dependency> REQUIRED)
+find_package(rclcpp REQUIRED)
+find_package(std_msgs REQUIRED)
+find_package(pcl_conversions REQUIRED)
+find_package(pcl_ros REQUIRED)
+find_package(PCL REQUIRED COMPONENTS common filters)
+
+include_directories(include ${PCL_INCLUDE_DIRS})
+link_directories(${PCL_LIBRARY_DIRS})
+add_definitions(${PCL_DEFINITIONS})
 
 add_library(wildguide_core src/wildguide_core.cpp)
 add_library(wildguide_core::wildguide_core ALIAS wildguide_core)
@@ -22,6 +30,18 @@ target_include_directories(wildguide_core PUBLIC
 # Causes the visibility macros to use dllexport rather than dllimport,
 # which is appropriate when building the dll but not consuming it.
 target_compile_definitions(wildguide_core PRIVATE "WILDGUIDE_CORE_BUILDING_LIBRARY")
+
+add_executable(weather_filter_node src/weather_filter.cpp src/weather_filter_node.cpp)
+target_include_directories(weather_filter_node PUBLIC
+  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+  $<INSTALL_INTERFACE:include/${PROJECT_NAME}>)
+target_link_libraries(weather_filter_node PUBLIC rclcpp::rclcpp ${std_msgs_TARGETS} ${PCL_LIBRARIES}
+  )
+
+install(TARGETS
+  weather_filter_node
+  DESTINATION lib/${PROJECT_NAME})
+
 
 install(
   DIRECTORY include/
