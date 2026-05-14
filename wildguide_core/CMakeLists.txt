@@ -8,13 +8,14 @@ endif()
 # find dependencies
 find_package(ament_cmake REQUIRED)
 find_package(ament_cmake_ros REQUIRED)
-# uncomment the following section in order to fill in
-# further dependencies manually.
 find_package(rclcpp REQUIRED)
+find_package(rclcpp_components REQUIRED)
+find_package(sensor_msgs REQUIRED)
 find_package(std_msgs REQUIRED)
 find_package(pcl_conversions REQUIRED)
 find_package(pcl_ros REQUIRED)
 find_package(PCL REQUIRED COMPONENTS common filters)
+find_package(OpenMP REQUIRED)
 
 include_directories(include ${PCL_INCLUDE_DIRS})
 link_directories(${PCL_LIBRARY_DIRS})
@@ -35,13 +36,50 @@ add_executable(weather_filter_node src/weather_filter.cpp src/weather_filter_nod
 target_include_directories(weather_filter_node PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
   $<INSTALL_INTERFACE:include/${PROJECT_NAME}>)
-target_link_libraries(weather_filter_node PUBLIC rclcpp::rclcpp ${std_msgs_TARGETS} ${PCL_LIBRARIES}
+target_link_libraries(weather_filter_node 
+  PUBLIC 
+  rclcpp::rclcpp
+  ${std_msgs_TARGETS} 
+  ${sensor_msgs_TARGETS}
+  ${PCL_LIBRARIES} 
+  OpenMP::OpenMP_CXX
   )
 
 install(TARGETS
   weather_filter_node
   DESTINATION lib/${PROJECT_NAME})
 
+add_library(weather_filter_component SHARED src/weather_filter_component.cpp src/weather_filter.cpp)
+target_compile_options(weather_filter_component PRIVATE ${OpenMP_CXX_FLAGS})
+target_include_directories(weather_filter_component  PUBLIC
+  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+  $<INSTALL_INTERFACE:include/${PROJECT_NAME}>)
+target_link_libraries(weather_filter_component
+  PUBLIC 
+  rclcpp::rclcpp
+  rclcpp_components::component
+  rclcpp_components::component_manager
+  pcl_conversions::pcl_conversions
+  ${std_msgs_TARGETS} 
+  ${sensor_msgs_TARGETS}
+  ${PCL_LIBRARIES} 
+  OpenMP::OpenMP_CXX
+  )
+
+rclcpp_components_register_node(
+    weather_filter_component
+    PLUGIN "wildguide_core::WeatherPclFilterComponent"
+    EXECUTABLE weather_filter_component_exe
+)
+
+
+ament_export_targets(export_weather_filter_component)
+install(TARGETS weather_filter_component
+        EXPORT export_weather_filter_component
+        ARCHIVE DESTINATION lib
+        LIBRARY DESTINATION lib
+        RUNTIME DESTINATION bin
+)
 
 install(
   DIRECTORY include/

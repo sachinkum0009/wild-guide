@@ -2,15 +2,17 @@
 <?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
 <package format="3">
   <name>wildguide_core</name>
-  <version>0.0.0</version>
-  <description>TODO: Package description</description>
+  <version>0.0.1</version>
+  <description>Wildguide Core ROS2 package to manage core dependencies</description>
   <maintainer email="sachinkumar.ar97@gmail.com">Sachin Kumar</maintainer>
   <license>Apache License 2.0</license>
 
   <buildtool_depend>ament_cmake_ros</buildtool_depend>
 
   <depend>rclcpp</depend>
+  <depend>rclcpp_components</depend>
   <depend>std_msgs</depend>
+  <depend>sensor_msgs</depend>
   <depend>pcl_ros</depend>
   <depend>pcl_conversions</depend>
 
